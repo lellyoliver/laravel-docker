@@ -141,5 +141,6 @@ docker compose down -v
 - `.docker/php/Dockerfile` contém a instalação do PHP, extensões e Composer.
 - `.docker/nginx/default.conf` contém a configuração do Nginx apontando para `/var/www/html/public`.
 - Certifique-se de que o Docker esteja rodando antes de executar os comandos.
+- Caso de algum erro de permissão, rodar: ``docker compose exec app bash -lc "chmod -R 777 storage bootstrap/cache"``
 
 ---
