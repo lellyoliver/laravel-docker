@@ -1,24 +1,49 @@
 # add-docker-laravel
 
-Nginx + PHP-FPM + MySQL
+Configuração de ambiente Laravel com **Nginx + PHP-FPM + MySQL** utilizando Docker.
 
-mkdir laravel-docker
-cd laravel-docker
+---
 
+## 📂 Estrutura de pastas
 
-2) Arquivos do Docker
-docker-compose.yml
-Crie este arquivo na raiz:
+```
+.
+├── .docker
+│   ├── nginx
+│   │   └── default.conf
+│   └── php
+│       └── Dockerfile
+├── projeto
+└── docker-compose.yml
+```
 
-yaml
-Copiar
-Editar
+> **Atenção:** Antes de subir o ambiente, **verifique e ajuste os volumes no `docker-compose.yml`** para apontarem para a pasta correta do seu projeto.  
+> No exemplo abaixo, o volume está mapeando a pasta `projeto` para `/var/www/html` dentro do container.
+
+---
+
+## 🛠 Passo a passo
+
+### 1) Clonar o repositório
+
+```bash
+git clone https://github.com/seu-usuario/seu-repositorio.git
+cd seu-repositorio
+```
+
+---
+
+### 2) Ajustar volumes no `docker-compose.yml`
+
+Exemplo de configuração (atualize o caminho caso necessário):
+
+```yaml
 services:
   app:
     build: ./.docker/php
     container_name: laravel-app
     volumes:
-      - ./:/var/www/html
+      - ./projeto:/var/www/html
     depends_on:
       - mysql
 
@@ -28,7 +53,7 @@ services:
     ports:
       - "8000:80"
     volumes:
-      - ./:/var/www/html
+      - ./projeto:/var/www/html
       - ./.docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - app
@@ -48,50 +73,65 @@ services:
 
 volumes:
   mysql_data:
+```
 
+---
 
+### 3) Instalar o Laravel (se ainda não existir na pasta `projeto`)
 
-  ./.docker/php/Dockerfile
-Crie a pasta .docker/php e o arquivo:
+No PowerShell:
 
-dockerfile
-Copiar
-Editar
-FROM php:8.3-fpm
+```powershell
+docker run --rm -v ${PWD}/projeto:/app -w /app composer:2 composer create-project laravel/laravel .
+```
 
-RUN apt-get update && apt-get install -y \
-    git unzip libpng-dev libonig-dev libxml2-dev libzip-dev libicu-dev \
-    && rm -rf /var/lib/apt/lists/*
+No `cmd.exe`:
 
-RUN docker-php-ext-install pdo_mysql mbstring bcmath intl zip
+```cmd
+docker run --rm -v %cd%/projeto:/app -w /app composer:2 composer create-project laravel/laravel .
+```
 
-# (Opcional) GD para manipular imagens
-RUN docker-php-ext-configure gd && docker-php-ext-install gd
+---
 
-# Composer dentro da imagem
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+### 4) Configurar `.env`
 
-WORKDIR /var/www/html
-./.docker/nginx/default.conf
-Crie a pasta .docker/nginx e o arquivo:
+No arquivo `.env` (dentro de `projeto`), configure o banco de dados:
 
-server {
-    listen 80;
-    server_name localhost;
-    root /var/www/html/public;
+```ini
+APP_URL=http://localhost:8000
 
-    index index.php index.html;
+DB_CONNECTION=mysql
+DB_HOST=mysql
+DB_PORT=3306
+DB_DATABASE=laravel
+DB_USERNAME=laravel
+DB_PASSWORD=laravel
+```
 
-    location / {
-        try_files $uri $uri/ /index.php?$query_string;
-    }
+---
 
-    location ~ \.php$ {
-        include fastcgi_params;
-        fastcgi_pass app:9000;
-        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
-        fastcgi_param DOCUMENT_ROOT $realpath_root;
-    }
+### 5) Subir os containers
 
-    client_max_body_size 20M;
-}
+```powershell
+docker compose up -d --build
+```
+
+Laravel estará acessível em: [http://localhost:8000](http://localhost:8000)
+
+---
+
+### 6) Parar e remover containers
+
+```powershell
+docker compose down -v
+```
+
+---
+
+## 📌 Observações
+
+- `.docker/php/Dockerfile` contém a instalação do PHP, extensões e Composer.
+- `.docker/nginx/default.conf` contém a configuração do Nginx apontando para `/var/www/html/public`.
+- Certifique-se de que o Docker esteja rodando antes de executar os comandos.
+
+---
