@@ -27,8 +27,8 @@ Configuração de ambiente Laravel com **Nginx + PHP-FPM + MySQL** utilizando Do
 ### 1) Clonar o repositório
 
 ```bash
-git clone https://github.com/seu-usuario/seu-repositorio.git
-cd seu-repositorio
+git clone https://github.com/lellyoliver/add-docker-laravel.git
+cd add-docker-laravel
 ```
 
 ---
