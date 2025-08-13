@@ -128,7 +128,7 @@ Laravel estará acessível em: [http://localhost:8000](http://localhost:8000)
 
 ---
 
-### 6) Parar e remover containers
+### 7) Parar e remover containers
 
 ```powershell
 docker compose down -v
