@@ -19,7 +19,7 @@ Configuração de ambiente Laravel com **Nginx + PHP-FPM + MySQL** utilizando Do
 
 > **Atenção:** Antes de subir o ambiente, **verifique e ajuste os volumes no `docker-compose.yml`** para apontarem para a pasta correta do seu projeto.
 > No exemplo abaixo, o volume está mapeando a pasta `projeto` para `/var/www/html` dentro do container.
-> mudar o nome da pasta **docker** para **.docker**
+> Mudar o nome da pasta **docker** para **.docker**
 
 ---
 
