@@ -117,6 +117,13 @@ DB_PASSWORD=laravel
 docker compose up -d --build
 ```
 
+### 6) Rode o artisan
+```
+docker compose exec app composer install
+docker compose exec app php artisan key:generate
+docker compose exec app php artisan migrate
+```
+
 Laravel estará acessível em: [http://localhost:8000](http://localhost:8000)
 
 ---
