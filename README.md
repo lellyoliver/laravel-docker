@@ -1,4 +1,4 @@
-# add-docker-laravel
+# laravel-docker
 
 Configuração de ambiente Laravel com **Nginx + PHP-FPM + MySQL** utilizando Docker.
 
